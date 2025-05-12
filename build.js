@@ -27,7 +27,14 @@ pages.forEach(page => {
     if (page.endsWith('.md')) {
         const markdown = fs.readFileSync(path.join(pagesDir, page), 'utf-8');
         const title = page.replace('.md', '');
-        const html = convertMarkdownToHtml(markdown, title);
+        let html;
+        if (title === 'index') {
+            // For index.html, convert Markdown to HTML directly without using the template
+            html = marked(markdown);
+        } else {
+            // For other pages, use the template
+            html = convertMarkdownToHtml(markdown, title);
+        }
         fs.writeFileSync(path.join('public', `${title}.html`), html);
     }
 });
